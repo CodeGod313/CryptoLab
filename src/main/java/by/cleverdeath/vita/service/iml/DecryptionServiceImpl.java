@@ -1,6 +1,6 @@
 package by.cleverdeath.vita.service.iml;
 
-import by.cleverdeath.vita.entyties.GridPosition;
+import by.cleverdeath.vita.entity.GridPosition;
 import by.cleverdeath.vita.service.DecryptionService;
 
 import java.util.ArrayList;

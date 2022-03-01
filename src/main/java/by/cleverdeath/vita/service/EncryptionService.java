@@ -1,6 +1,6 @@
 package by.cleverdeath.vita.service;
 
-import by.cleverdeath.vita.entyties.GridPosition;
+import by.cleverdeath.vita.entity.GridPosition;
 
 import java.util.List;
 

@@ -1,6 +1,6 @@
 package by.cleverdeath.vita.service.iml;
 
-import by.cleverdeath.vita.entyties.GridPosition;
+import by.cleverdeath.vita.entity.GridPosition;
 import by.cleverdeath.vita.service.EncryptionService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;

@@ -1,4 +1,4 @@
-package by.cleverdeath.vita.entyties;
+package by.cleverdeath.vita.entity;
 
 public class GridPosition {
     int x;
