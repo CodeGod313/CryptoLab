@@ -15,16 +15,15 @@ public class EncryptionServiceImpl implements EncryptionService {
     @Override
     public String encryptWithHedge(String message, Integer height) {
         int currentHeight = 0; // текущая высота, на которой мы находимся (0 - вершина изгороди, height - низ)
-        boolean direction = false; // false - down, true - up (направление движения)
+        boolean direction = true; // false - down, true - up (направление движения)
         List<StringBuffer> levelStrings = new ArrayList<>(); // слова, которые получаются из букв на разных уровнях (в методе в примере на верхнем уровне получается CTA, на втором RPORPY и т. д.)
         for (int i = 0; i < height; i++) { // просто инициализация объектов
             levelStrings.add(new StringBuffer());
         }
-        boolean firstIteration = true; // переменная, которая определяет, первая ли это итерация нижнего цикла или нет (только что понял, что можно и без неё :) )
         for (int i = 0; i < message.length(); i++) { // цикл по сообщению, которое шифруем
             Character currentChar = message.charAt(i); // текущая буква сообщения, которое шифруем
             levelStrings.get(currentHeight).append(currentChar); // получаем слово с уровня, на котором находимся и добавляем в него текущую букву
-            if (currentHeight == height - 1 || (currentHeight == 0 && !firstIteration)) { // если мы упёрлись в верх изгороди или в низ, меняем направление движения на противоположное(currentHeight == height - 1 это текущая высота упёрлась в низ изгороди, currentHeight == 0 это когда упёрлись вверх)
+            if (currentHeight == height - 1 || currentHeight == 0) { // если мы упёрлись в верх изгороди или в низ, меняем направление движения на противоположное(currentHeight == height - 1 это текущая высота упёрлась в низ изгороди, currentHeight == 0 это когда упёрлись вверх)
                 direction = !direction;
             }
             if (direction) { // в зависимости от направления движения переходим на уровень выше/ниже
@@ -32,7 +31,6 @@ public class EncryptionServiceImpl implements EncryptionService {
             } else {
                 currentHeight++;
             }
-            firstIteration = false;
         }
         StringBuffer encryptedSequence = new StringBuffer(); // зашифрованная последовательность
         levelStrings.forEach(encryptedSequence::append); // просто соединяем слова, которые получились со слов со всех уровней
