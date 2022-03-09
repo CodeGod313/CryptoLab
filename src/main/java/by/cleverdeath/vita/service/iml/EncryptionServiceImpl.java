@@ -10,6 +10,7 @@ import java.util.*;
 public class EncryptionServiceImpl implements EncryptionService {
 
     public static final String SPACE = " ";
+    public static final String EMPTY_STRING = "";
 
     @Override
     public Optional<String> encryptWithHedge(String message, Integer height) {
@@ -55,7 +56,10 @@ public class EncryptionServiceImpl implements EncryptionService {
                 .sorted(Map.Entry.comparingByValue())
                 .map((Map.Entry::getKey))
                 .toList();
-        String spaces = SPACE.repeat(keyPhrase.length() - message.length() % keyPhrase.length()); // добавляем пробелы, чтобы размер подходил под ключевую фразу
+        String spaces = EMPTY_STRING;
+        if (message.length() % keyPhrase.length() != 0) {
+            spaces = SPACE.repeat(keyPhrase.length() - message.length() % keyPhrase.length()); // добавляем пробелы, чтобы размер подходил под ключевую фразу
+        }
         StringBuffer readyMessageBuffer = new StringBuffer(message);
         readyMessageBuffer.append(spaces); // добавляем пробелы
         String readyMessage = readyMessageBuffer.toString();
@@ -76,7 +80,10 @@ public class EncryptionServiceImpl implements EncryptionService {
         if (!encryptionValidator.validateGridParameters(message, gridDimension, positions)) {
             return Optional.empty();
         }
-        String spaces = SPACE.repeat(gridDimension * gridDimension - message.length() % (gridDimension * gridDimension));// дополняем шифруемый текст польностью, чтобы решётка была полностью заполненной
+        String spaces = EMPTY_STRING;
+        if (message.length() % (gridDimension * gridDimension) != 0) {
+            spaces = SPACE.repeat(gridDimension * gridDimension - message.length() % (gridDimension * gridDimension));// дополняем шифруемый текст польностью, чтобы решётка была полностью заполненной
+        }
         StringBuffer readyMessageBuffer = new StringBuffer(message); // зашифрованное сообщение (передаём в конструктор сообщение)
         readyMessageBuffer.append(spaces); //добавляем пробелы
         String readyMessage = readyMessageBuffer.toString(); // готовое сообщение
