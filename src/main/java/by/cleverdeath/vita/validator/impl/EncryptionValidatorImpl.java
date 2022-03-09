@@ -8,7 +8,7 @@ import java.util.List;
 
 public class EncryptionValidatorImpl implements EncryptionValidator {
 
-    public static final String REGEX_CHARACTER = "[A-Za-z]";
+    public static final String REGEX_CHARACTER = "[A-Za-z\\s]+";
 
     @Override
     public boolean validateHedgeParameters(String message, Integer height) {
@@ -33,9 +33,9 @@ public class EncryptionValidatorImpl implements EncryptionValidator {
                 positions != null &&
                 gridDimension == positions.size() &&
                 positions.stream().allMatch(
-                        x -> x.getX() > 0 &&
+                        x -> x.getX() >= 0 &&
                                 x.getX() < gridDimension &&
-                                x.getY() > 0 &&
+                                x.getY() >= 0 &&
                                 x.getY() < gridDimension) &&
                 new HashSet<>(positions).size() == positions.size();
     }
