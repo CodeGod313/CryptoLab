@@ -2,29 +2,31 @@ package by.cleverdeath.vita.service.iml;
 
 import by.cleverdeath.vita.entity.GridPosition;
 import by.cleverdeath.vita.service.DecryptionService;
+import by.cleverdeath.vita.validator.DecryptionValidator;
+import by.cleverdeath.vita.validator.impl.DecryptionValidatorImpl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class DecryptionServiceImpl implements DecryptionService {
 
     public static final String SPACE = " ";
 
     @Override
-    public String decryptWithHedge(String message, Integer height) {
+    public Optional<String> decryptWithHedge(String message, Integer height) {
+        DecryptionValidator decryptionValidator = new DecryptionValidatorImpl();
+        if (!decryptionValidator.validateHedgeParameters(message, height)) {
+            return Optional.empty();
+        }
         int currentHeight = 0;
-        boolean direction = false; // false - down, true - up
+        boolean direction = true; // false - down, true - up
         List<Integer> levelLength = new ArrayList<>();
         for (int i = 0; i < height; i++) {
             levelLength.add(0);
         }
         boolean firstIteration = true;
         for (int i = 0; i < message.length(); i++) {
-            Character currentChar = message.charAt(i);
             levelLength.set(currentHeight, levelLength.get(currentHeight) + 1);
-            if (currentHeight == height - 1 || (currentHeight == 0 && !firstIteration)) {
+            if (currentHeight == height - 1 || currentHeight == 0) {
                 direction = !direction;
             }
             if (direction) {
@@ -32,7 +34,6 @@ public class DecryptionServiceImpl implements DecryptionService {
             } else {
                 currentHeight++;
             }
-            firstIteration = false;
         }
         List<String> levelStrings = new ArrayList<>();
         levelStrings.add(message.substring(0, levelLength.get(0)));
@@ -42,13 +43,13 @@ public class DecryptionServiceImpl implements DecryptionService {
             levelStrings.add(message.substring(startElement, startElement + levelLength.get(i)));
         }
         StringBuffer decryptedMessage = new StringBuffer();
-        firstIteration = false;
+        direction = true;
         for (int i = 0; i < message.length(); i++) {
             decryptedMessage.append(levelStrings.get(currentHeight).charAt(0));
             if (levelStrings.get(currentHeight).length() != 1) {
                 levelStrings.set(currentHeight, levelStrings.get(currentHeight).substring(1));
             }
-            if (currentHeight == height - 1 || (currentHeight == 0 && !firstIteration)) {
+            if (currentHeight == height - 1 || currentHeight == 0) {
                 direction = !direction;
             }
             if (direction) {
@@ -56,13 +57,16 @@ public class DecryptionServiceImpl implements DecryptionService {
             } else {
                 currentHeight++;
             }
-            firstIteration = false;
         }
-        return decryptedMessage.toString();
+        return Optional.of(decryptedMessage.toString());
     }
 
     @Override
-    public String decryptWithKeyPhrase(String message, String keyPhrase) {
+    public Optional<String> decryptWithKeyPhrase(String message, String keyPhrase) {
+        DecryptionValidator decryptionValidator = new DecryptionValidatorImpl();
+        if (!decryptionValidator.validateKeyPhraseParameters(message, keyPhrase)) {
+            return Optional.empty();
+        }
         Map<Integer, Character> positionsWithCharacters = new HashMap<>();
         for (int i = 0; i < keyPhrase.length(); i++) {
             positionsWithCharacters.put(i, keyPhrase.charAt(i));
@@ -79,11 +83,15 @@ public class DecryptionServiceImpl implements DecryptionService {
                 decryptedMessage.setCharAt(startElement + sortedIndexes.get(j), message.charAt(startElement + j));
             }
         }
-        return decryptedMessage.toString();
+        return Optional.of(decryptedMessage.toString());
     }
 
     @Override
-    public String decryptWithGrid(String message, Integer gridDimension, List<GridPosition> positions) {
+    public Optional<String> decryptWithGrid(String message, Integer gridDimension, List<GridPosition> positions) {
+        DecryptionValidator decryptionValidator = new DecryptionValidatorImpl();
+        if (!decryptionValidator.validateGridParameters(message, gridDimension, positions)) {
+            return Optional.empty();
+        }
         StringBuffer decryptedMessage = new StringBuffer();
         for (int k = 0; k < message.length() / (gridDimension * gridDimension); k++) {
             int startBlockIndex = k * gridDimension * gridDimension;
@@ -102,11 +110,15 @@ public class DecryptionServiceImpl implements DecryptionService {
                 grid = rotateGrid(grid);
             }
         }
-        return decryptedMessage.toString();
+        return Optional.of(decryptedMessage.toString());
     }
 
     @Override
-    public String decryptCesar(String message, Integer decryptionKey) {
+    public Optional<String> decryptCesar(String message, Integer decryptionKey) {
+        DecryptionValidator decryptionValidator = new DecryptionValidatorImpl();
+        if (!decryptionValidator.validateSubstitutionTypeParameters(message, decryptionKey)) {
+            return Optional.empty();
+        }
         StringBuffer decryptedSequence = new StringBuffer(message);
         for (int i = 0; i < message.length(); i++) {
             Character currentChar = message.charAt(i);
@@ -119,7 +131,7 @@ public class DecryptionServiceImpl implements DecryptionService {
                 decryptedSequence.setCharAt(i, replaceCharacter);
             }
         }
-        return decryptedSequence.toString();
+        return Optional.of(decryptedSequence.toString());
     }
 
     private Character[][] rotateGrid(Character[][] grid) {
@@ -133,7 +145,11 @@ public class DecryptionServiceImpl implements DecryptionService {
     }
 
     @Override
-    public String decryptWithSubstitution(String message, Integer decryptionKey) {
+    public Optional<String> decryptWithSubstitution(String message, Integer decryptionKey) {
+        DecryptionValidator decryptionValidator = new DecryptionValidatorImpl();
+        if(!decryptionValidator.validateSubstitutionTypeParameters(message,decryptionKey)){
+            return Optional.empty();
+        }
         StringBuffer decryptionSequence = new StringBuffer(message);
         for (int i = 0; i < message.length(); i++) {
             Character currentChar = message.charAt(i);
@@ -146,6 +162,6 @@ public class DecryptionServiceImpl implements DecryptionService {
                 decryptionSequence.setCharAt(i, replaceCharacter);
             }
         }
-        return decryptionSequence.toString();
+        return Optional.of(decryptionSequence.toString());
     }
 }
