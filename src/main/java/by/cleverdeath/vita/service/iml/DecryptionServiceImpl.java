@@ -84,19 +84,23 @@ public class DecryptionServiceImpl implements DecryptionService {
 
     @Override
     public String decryptWithGrid(String message, Integer gridDimension, List<GridPosition> positions) {
-        Character[][] grid = new Character[gridDimension][gridDimension];
-        for (int i = 0; i < gridDimension; i++) {
-            for (int j = 0; j < gridDimension; j++) {
-                grid[i][j] = message.charAt(i * gridDimension + j);
-            }
-        }
         StringBuffer decryptedMessage = new StringBuffer();
-        for (int i = 0; i < gridDimension; i++) {
-            for (int j = 0; j < positions.size(); j++) {
-                GridPosition position = positions.get(j);
-                decryptedMessage.append(grid[position.getX()][position.getY()]);
+        for (int k = 0; k < message.length() / (gridDimension * gridDimension); k++) {
+            int startBlockIndex = k * gridDimension * gridDimension;
+            Character[][] grid = new Character[gridDimension][gridDimension];
+            for (int i = 0; i < gridDimension; i++) {
+                for (int j = 0; j < gridDimension; j++) {
+                    grid[i][j] = message.charAt(i * gridDimension + j + startBlockIndex);
+                }
             }
-            grid = rotateGrid(grid);
+
+            for (int i = 0; i < gridDimension; i++) {
+                for (int j = 0; j < positions.size(); j++) {
+                    GridPosition position = positions.get(j);
+                    decryptedMessage.append(grid[position.getX()][position.getY()]);
+                }
+                grid = rotateGrid(grid);
+            }
         }
         return decryptedMessage.toString();
     }
