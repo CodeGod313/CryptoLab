@@ -3,15 +3,16 @@ package by.cleverdeath.vita.service;
 import by.cleverdeath.vita.entity.GridPosition;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface EncryptionService {
-    String encryptWithHedge(String message, Integer height);
+    Optional<String> encryptWithHedge(String message, Integer height);
 
-    String encryptWithKeyPhrase(String message, String keyPhrase);
+    Optional<String> encryptWithKeyPhrase(String message, String keyPhrase);
 
-    String encryptWithGrid(String message, Integer gridDimension, List<GridPosition> positions);
+    Optional<String> encryptWithGrid(String message, Integer gridDimension, List<GridPosition> positions);
 
-    String encryptCesar(String message, Integer encryptionKey);
+    Optional<String> encryptCesar(String message, Integer encryptionKey);
 
-    String encryptWithSubstitution(String message, Integer encryptionKey);
+    Optional<String> encryptWithSubstitution(String message, Integer encryptionKey);
 }
