@@ -11,6 +11,5 @@ public interface EncryptionValidator {
 
     boolean validateGridParameters(String message, Integer gridDimension, List<GridPosition> positions);
 
-
     boolean validateSubstitutionTypeParameters(String message, Integer encryptionKey);
 }

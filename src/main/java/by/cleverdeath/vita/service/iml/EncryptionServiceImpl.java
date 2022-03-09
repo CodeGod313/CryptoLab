@@ -2,18 +2,21 @@ package by.cleverdeath.vita.service.iml;
 
 import by.cleverdeath.vita.entity.GridPosition;
 import by.cleverdeath.vita.service.EncryptionService;
+import by.cleverdeath.vita.validator.EncryptionValidator;
+import by.cleverdeath.vita.validator.impl.EncryptionValidatorImpl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class EncryptionServiceImpl implements EncryptionService {
 
     public static final String SPACE = " ";
 
     @Override
-    public String encryptWithHedge(String message, Integer height) {
+    public Optional<String> encryptWithHedge(String message, Integer height) {
+        EncryptionValidator encryptionValidator = new EncryptionValidatorImpl();
+        if (!encryptionValidator.validateHedgeParameters(message, height)) {
+            return Optional.empty();
+        }
         int currentHeight = 0; // текущая высота, на которой мы находимся (0 - вершина изгороди, height - низ)
         boolean direction = true; // false - down, true - up (направление движения)
         List<StringBuffer> levelStrings = new ArrayList<>(); // слова, которые получаются из букв на разных уровнях (в методе в примере на верхнем уровне получается CTA, на втором RPORPY и т. д.)
@@ -34,11 +37,15 @@ public class EncryptionServiceImpl implements EncryptionService {
         }
         StringBuffer encryptedSequence = new StringBuffer(); // зашифрованная последовательность
         levelStrings.forEach(encryptedSequence::append); // просто соединяем слова, которые получились со слов со всех уровней
-        return encryptedSequence.toString();
+        return Optional.of(encryptedSequence.toString());
     }
 
     @Override
-    public String encryptWithKeyPhrase(String message, String keyPhrase) {
+    public Optional<String> encryptWithKeyPhrase(String message, String keyPhrase) {
+        EncryptionValidator encryptionValidator = new EncryptionValidatorImpl();
+        if (!encryptionValidator.validateKeyPhraseParameters(message, keyPhrase)) {
+            return Optional.empty();
+        }
         Map<Integer, Character> positionsWithCharacters = new HashMap<>(); // мапа, в которой ключ - позиция буквы в влючевом слове, а значение -  сама буква
         for (int i = 0; i < keyPhrase.length(); i++) {
             positionsWithCharacters.put(i, keyPhrase.charAt(i)); // заполняем мапу
@@ -60,11 +67,15 @@ public class EncryptionServiceImpl implements EncryptionService {
                 encryptedSequence.append(readyMessage.charAt(currentCharIndex)); // добавляем букву в выходную последовательность
             });
         }
-        return encryptedSequence.toString();
+        return Optional.of(encryptedSequence.toString());
     }
 
     @Override
-    public String encryptWithGrid(String message, Integer gridDimension, List<GridPosition> positions) {
+    public Optional<String> encryptWithGrid(String message, Integer gridDimension, List<GridPosition> positions) {
+        EncryptionValidator encryptionValidator = new EncryptionValidatorImpl();
+        if (!encryptionValidator.validateGridParameters(message, gridDimension, positions)) {
+            return Optional.empty();
+        }
         String spaces = SPACE.repeat(gridDimension * gridDimension - message.length() % (gridDimension * gridDimension));// дополняем шифруемый текст польностью, чтобы решётка была полностью заполненной
         StringBuffer readyMessageBuffer = new StringBuffer(message); // зашифрованное сообщение (передаём в конструктор сообщение)
         readyMessageBuffer.append(spaces); //добавляем пробелы
@@ -89,11 +100,15 @@ public class EncryptionServiceImpl implements EncryptionService {
                 }
             }
         }
-        return encryptedSequence.toString();
+        return Optional.of(encryptedSequence.toString());
     }
 
     @Override
-    public String encryptCesar(String message, Integer encryptionKey) { // тут всё просто по формулам
+    public Optional<String> encryptCesar(String message, Integer encryptionKey) { // тут всё просто по формулам
+        EncryptionValidator encryptionValidator = new EncryptionValidatorImpl();
+        if(!encryptionValidator.validateSubstitutionTypeParameters(message, encryptionKey)){
+            return Optional.empty();
+        }
         StringBuffer encryptedSequence = new StringBuffer(message);
         for (int i = 0; i < message.length(); i++) {
             Character currentChar = message.charAt(i);
@@ -106,7 +121,7 @@ public class EncryptionServiceImpl implements EncryptionService {
                 encryptedSequence.setCharAt(i, replaceCharacter);
             }
         }
-        return encryptedSequence.toString();
+        return Optional.of(encryptedSequence.toString());
     }
 
 
@@ -121,7 +136,11 @@ public class EncryptionServiceImpl implements EncryptionService {
     }
 
     @Override
-    public String encryptWithSubstitution(String message, Integer encryptionKey) { // тут тоже всё по формулам
+    public Optional<String> encryptWithSubstitution(String message, Integer encryptionKey) { // тут тоже всё по формулам
+        EncryptionValidator encryptionValidator = new EncryptionValidatorImpl();
+        if(!encryptionValidator.validateSubstitutionTypeParameters(message, encryptionKey)){
+            return Optional.empty();
+        }
         StringBuffer encryptedSequence = new StringBuffer(message);
         for (int i = 0; i < message.length(); i++) {
             Character currentChar = message.charAt(i);
@@ -134,6 +153,6 @@ public class EncryptionServiceImpl implements EncryptionService {
                 encryptedSequence.setCharAt(i, replaceCharacter);
             }
         }
-        return encryptedSequence.toString();
+        return Optional.of(encryptedSequence.toString());
     }
 }
