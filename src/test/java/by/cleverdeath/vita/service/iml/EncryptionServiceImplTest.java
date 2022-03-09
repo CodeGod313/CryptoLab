@@ -24,7 +24,7 @@ class EncryptionServiceImplTest {
         String message = "CRYPTOGRAPHY";
         Integer height = 3;
         String expected = "CTARPORPYYGH";
-        String actual = encryptionService.encryptWithHedge(message, height);
+        String actual = encryptionService.encryptWithHedge(message, height).get();
         Assertions.assertEquals(expected, actual);
     }
 
@@ -33,7 +33,7 @@ class EncryptionServiceImplTest {
         String message = "ЭТО–_ЛЕКЦИЯ_ПО_АЛГОРИТМАМ_ШИФРОВАНИЯ";
         String keyPhrase = "КРИПТОГРАФИЯ";
         String expected = "ЦЕОЯЭЛ–ТК_И_ИО_МПГАОРЛТААОШИМРИ_ВФНЯ";
-        String actual = encryptionService.encryptWithKeyPhrase(message, keyPhrase);
+        String actual = encryptionService.encryptWithKeyPhrase(message, keyPhrase).get();
         Assertions.assertEquals(expected, actual);
     }
 
@@ -48,7 +48,7 @@ class EncryptionServiceImplTest {
                 new GridPosition(2, 2)
         );
         String expected = "ЭКОРПКИТПТЛЦЕОИЯ";
-        String actual = encryptionService.encryptWithGrid(message, gridDimension, positions);
+        String actual = encryptionService.encryptWithGrid(message, gridDimension, positions).get();
         Assertions.assertEquals(expected, actual);
     }
 
@@ -57,7 +57,7 @@ class EncryptionServiceImplTest {
         String message = "I LOVE YOU";
         Integer encryptionKey = 3;
         String expected = "L ORYH BRX";
-        String actual = encryptionService.encryptCesar(message, encryptionKey);
+        String actual = encryptionService.encryptCesar(message, encryptionKey).get();
         Assertions.assertEquals(expected, actual);
     }
 
@@ -66,7 +66,7 @@ class EncryptionServiceImplTest {
         String message = "I LOVE YOU";
         Integer encryptionKey = 7;
         String expected = "E ZURC MUK";
-        String actual = encryptionService.encryptWithSubstitution(message, encryptionKey);
+        String actual = encryptionService.encryptWithSubstitution(message, encryptionKey).get();
         Assertions.assertEquals(expected, actual);
     }
 }

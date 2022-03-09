@@ -23,7 +23,7 @@ class DecryptionServiceImplTest {
         String message = "CTARPORPYYGH";
         Integer height = 3;
         String expected = "CRYPTOGRAPHY";
-        String actual = decryptionService.decryptWithHedge(message, height);
+        String actual = decryptionService.decryptWithHedge(message, height).get();
         Assertions.assertEquals(expected, actual);
     }
 
@@ -32,7 +32,7 @@ class DecryptionServiceImplTest {
         String message = "ЦЕОЯЭЛ–ТК_И_ИО_МПГАОРЛТААОШИМРИ_ВФНЯ";
         String keyPhrase = "КРИПТОГРАФИЯ";
         String expected = "ЭТО–_ЛЕКЦИЯ_ПО_АЛГОРИТМАМ_ШИФРОВАНИЯ";
-        String actual = decryptionService.decryptWithKeyPhrase(message, keyPhrase);
+        String actual = decryptionService.decryptWithKeyPhrase(message, keyPhrase).get();
         Assertions.assertEquals(expected, actual);
     }
 
@@ -47,7 +47,7 @@ class DecryptionServiceImplTest {
                 new GridPosition(2, 2)
         );
         String expected = "ЭТОЛЕКЦИЯПОКРИПТ";
-        String actual = decryptionService.decryptWithGrid(message, gridDimension, positions);
+        String actual = decryptionService.decryptWithGrid(message, gridDimension, positions).get();
         Assertions.assertEquals(expected, actual);
     }
 
@@ -56,7 +56,7 @@ class DecryptionServiceImplTest {
         String message = "L ORYH BRX";
         Integer encryptionKey = 3;
         String expected = "I LOVE YOU";
-        String actual = decryptionService.decryptCesar(message, encryptionKey);
+        String actual = decryptionService.decryptCesar(message, encryptionKey).get();
         Assertions.assertEquals(expected, actual);
     }
 
@@ -65,7 +65,7 @@ class DecryptionServiceImplTest {
         String message = "E ZURC MUK";
         Integer encryptionKey = 15;
         String expected = "I LOVE YOU";
-        String actual = decryptionService.decryptWithSubstitution(message, encryptionKey);
+        String actual = decryptionService.decryptWithSubstitution(message, encryptionKey).get();
         Assertions.assertEquals(expected, actual);
     }
 }
