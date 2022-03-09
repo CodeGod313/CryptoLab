@@ -55,7 +55,7 @@ public class EncryptionServiceImpl implements EncryptionService {
                 .sorted(Map.Entry.comparingByValue())
                 .map((Map.Entry::getKey))
                 .toList();
-        String spaces = SPACE.repeat(message.length() % keyPhrase.length()); // добавляем пробелы, чтобы размер подходил под ключевую фразу
+        String spaces = SPACE.repeat(keyPhrase.length() - message.length() % keyPhrase.length()); // добавляем пробелы, чтобы размер подходил под ключевую фразу
         StringBuffer readyMessageBuffer = new StringBuffer(message);
         readyMessageBuffer.append(spaces); // добавляем пробелы
         String readyMessage = readyMessageBuffer.toString();
@@ -106,7 +106,7 @@ public class EncryptionServiceImpl implements EncryptionService {
     @Override
     public Optional<String> encryptCesar(String message, Integer encryptionKey) { // тут всё просто по формулам
         EncryptionValidator encryptionValidator = new EncryptionValidatorImpl();
-        if(!encryptionValidator.validateSubstitutionTypeParameters(message, encryptionKey)){
+        if (!encryptionValidator.validateSubstitutionTypeParameters(message, encryptionKey)) {
             return Optional.empty();
         }
         StringBuffer encryptedSequence = new StringBuffer(message);
@@ -138,7 +138,7 @@ public class EncryptionServiceImpl implements EncryptionService {
     @Override
     public Optional<String> encryptWithSubstitution(String message, Integer encryptionKey) { // тут тоже всё по формулам
         EncryptionValidator encryptionValidator = new EncryptionValidatorImpl();
-        if(!encryptionValidator.validateSubstitutionTypeParameters(message, encryptionKey)){
+        if (!encryptionValidator.validateSubstitutionTypeParameters(message, encryptionKey)) {
             return Optional.empty();
         }
         StringBuffer encryptedSequence = new StringBuffer(message);
