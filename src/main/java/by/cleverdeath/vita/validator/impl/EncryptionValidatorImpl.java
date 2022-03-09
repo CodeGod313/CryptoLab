@@ -37,7 +37,7 @@ public class EncryptionValidatorImpl implements EncryptionValidator {
                                 x.getX() < gridDimension &&
                                 x.getY() > 0 &&
                                 x.getY() < gridDimension) &&
-                new HashSet<GridPosition>(positions).size() == positions.size();
+                new HashSet<>(positions).size() == positions.size();
     }
 
     @Override
