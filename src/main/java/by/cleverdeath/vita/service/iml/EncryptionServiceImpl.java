@@ -65,23 +65,28 @@ public class EncryptionServiceImpl implements EncryptionService {
 
     @Override
     public String encryptWithGrid(String message, Integer gridDimension, List<GridPosition> positions) {
-        Character[][] grid = new Character[gridDimension][gridDimension]; // создание решётки, ращмерностью, переданной в параметры метода
-        String spaces = SPACE.repeat(message.length() % gridDimension);// дополняем шифруемый текст польностью, чтобы решётка была полностью заполненной
+        String spaces = SPACE.repeat(gridDimension * gridDimension - message.length() % (gridDimension * gridDimension));// дополняем шифруемый текст польностью, чтобы решётка была полностью заполненной
         StringBuffer readyMessageBuffer = new StringBuffer(message); // зашифрованное сообщение (передаём в конструктор сообщение)
         readyMessageBuffer.append(spaces); //добавляем пробелы
         String readyMessage = readyMessageBuffer.toString(); // готовое сообщение
-        for (int i = 0; i < readyMessage.length() / gridDimension; i++) {
-            int currentCharacter = i * gridDimension;
-            for (int j = 0; j < positions.size(); j++) {
-                GridPosition position = positions.get(j);
-                grid[position.getX()][position.getY()] = readyMessage.charAt(currentCharacter + j);
-            }
-            grid = rotateGrid(grid);
-        }
         StringBuffer encryptedSequence = new StringBuffer();
-        for (int i = 0; i < gridDimension; i++) {
-            for (int j = 0; j < gridDimension; j++) {
-                encryptedSequence.append(grid[i][j]);
+        for (int k = 0; k < readyMessage.length() / (gridDimension * gridDimension); k++) { // Заполняем решётку столько раз, сколько надо, чтобы зашифровать сообщение (если размерность решётки 4, то можно зашифровать сообщение длиной 4*4. Для того чтобы зашифровать сообщение побольше нам необходима ещё одна решётка)
+            int startIndex = k * (gridDimension * gridDimension); // индекс начала шифруемого блока
+            Character[][] grid = new Character[gridDimension][gridDimension]; // создание решётки, размерностью, переданной в параметры метода
+
+            for (int i = 0; i < gridDimension; i++) { // проходим по блокам сообщения (блоки размерностью как и размерность решётки)
+                int currentCharacter = i * gridDimension; // начальный индекс блока
+                for (int j = 0; j < positions.size(); j++) {
+                    GridPosition position = positions.get(j);
+                    grid[position.getX()][position.getY()] = readyMessage.charAt(currentCharacter + j + startIndex); //добавляем букву в решётку по позиции, которую передали в параметры метода
+                }
+                grid = rotateGrid(grid); // поворачиваем решётку
+            }
+
+            for (int i = 0; i < gridDimension; i++) {
+                for (int j = 0; j < gridDimension; j++) {
+                    encryptedSequence.append(grid[i][j]); // складываем решётку в сообщение
+                }
             }
         }
         return encryptedSequence.toString();
