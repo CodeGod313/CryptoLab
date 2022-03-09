@@ -69,4 +69,15 @@ class EncryptionServiceImplTest {
         String actual = encryptionService.encryptWithSubstitution(message, encryptionKey);
         Assertions.assertEquals(expected, actual);
     }
+
+
+
+    @Test
+    void ass() {
+        String message = "ЭТО–_ЛЕКЦИЯ_ПО_АЛГОРИТМАМ_ШИФРОВАНИЯ фывафыва фывафыва";
+        String keyPhrase = "КРИПТОГРАФИЯ";
+        String expected = "ЦЕОЯЭЛ–ТК_И_ИО_МПГАОРЛТААОШИМРИ_ВФНЯ";
+        String actual = encryptionService.encryptWithKeyPhrase(message, keyPhrase);
+        Assertions.assertEquals(expected, actual);
+    }
 }
