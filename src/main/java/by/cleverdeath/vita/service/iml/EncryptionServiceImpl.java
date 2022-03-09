@@ -11,7 +11,6 @@ import java.util.Map;
 public class EncryptionServiceImpl implements EncryptionService {
 
     public static final String SPACE = " ";
-    public static final int GRID_DIMENSION = 5;
 
     @Override
     public String encryptWithHedge(String message, Integer height) {
