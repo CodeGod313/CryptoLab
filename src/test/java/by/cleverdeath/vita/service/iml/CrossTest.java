@@ -20,7 +20,7 @@ public class CrossTest {
     void steUp() {
         encryptionService = new EncryptionServiceImpl();
         decryptionService = new DecryptionServiceImpl();
-        expected = "zaraza"; // :*
+        expected = "aboba"; // :*
     }
 
     @Test
