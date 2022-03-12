@@ -23,7 +23,6 @@ public class DecryptionServiceImpl implements DecryptionService {
         for (int i = 0; i < height; i++) {
             levelLength.add(0);
         }
-        boolean firstIteration = true;
         for (int i = 0; i < message.length(); i++) {
             levelLength.set(currentHeight, levelLength.get(currentHeight) + 1);
             if (currentHeight == height - 1 || currentHeight == 0) {
@@ -44,6 +43,7 @@ public class DecryptionServiceImpl implements DecryptionService {
         }
         StringBuffer decryptedMessage = new StringBuffer();
         direction = true;
+        currentHeight = 0;
         for (int i = 0; i < message.length(); i++) {
             decryptedMessage.append(levelStrings.get(currentHeight).charAt(0));
             if (levelStrings.get(currentHeight).length() != 1) {
